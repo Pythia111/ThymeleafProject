@@ -1,0 +1,14 @@
+org\example\dao\UserRepository.class
+org\example\service\DecisionTreeGameService.class
+org\example\dao\GameRecordRepository.class
+org\example\controller\GameController.class
+org\example\service\AttributeEffect.class
+org\example\service\GameState.class
+org\example\controller\UserController.class
+org\example\service\RandomEvent.class
+org\example\entity\User.class
+org\example\service\Choice.class
+org\example\LifeSimulatorApplication.class
+org\example\service\DecisionNode.class
+org\example\service\LifeEvent.class
+org\example\entity\GameRecord.class

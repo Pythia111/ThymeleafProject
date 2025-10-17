@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏进行中 - 人生抉择模拟器</title>
+    <link href="/css/style.css" rel="stylesheet">
+    <style>
+        .attribute-change {
+            background: #e8f5e8;
+            border: 1px solid #4caf50;
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin: 10px 0;
+            color: #2e7d32;
+            font-weight: bold;
+            text-align: center;
+        }
+        .stat-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .stat-fill {
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        .wealth-bar { background: #ffc107; }
+        .health-bar { background: #4caf50; }
+        .happiness-bar { background: #ff9800; }
+        .knowledge-bar { background: #2196f3; }
+        .exit-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <!-- 导航栏 -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <h2 style="color: #667eea; margin: 0;">人生抉择模拟器</h2>
+        <div>
+            <span th:text="'欢迎, ' + ${session.user.username}"></span>
+            <a th:href="@{/game/records}" style="margin-left: 15px; color: #667eea;">历史记录</a>
+            <a th:href="@{/logout}" style="margin-left: 15px; color: #667eea;">退出</a>
+        </div>
+    </div>
+
+    <!-- 角色属性 -->
+    <div class="character-stats">
+        <div class="stat-item">
+            <div>年龄</div>
+            <div class="stat-value" th:text="${gameState.age} + '岁'">25岁</div>
+        </div>
+        <div class="stat-item">
+            <div>财富</div>
+            <div class="stat-value" th:text="${gameState.wealth}">50</div>
+            <div class="stat-bar">
+                <div class="stat-fill wealth-bar" th:style="'width: ' + ${gameState.wealth} + '%'"></div>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div>健康</div>
+            <div class="stat-value" th:text="${gameState.health}">50</div>
+            <div class="stat-bar">
+                <div class="stat-fill health-bar" th:style="'width: ' + ${gameState.health} + '%'"></div>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div>快乐</div>
+            <div class="stat-value" th:text="${gameState.happiness}">50</div>
+            <div class="stat-bar">
+                <div class="stat-fill happiness-bar" th:style="'width: ' + ${gameState.happiness} + '%'"></div>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div>智慧</div>
+            <div class="stat-value" th:text="${gameState.knowledge}">50</div>
+            <div class="stat-bar">
+                <div class="stat-fill knowledge-bar" th:style="'width: ' + ${gameState.knowledge} + '%'"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 属性变化提示 -->
+    <div th:if="${gameState.lastAttributeChanges != null and !gameState.lastAttributeChanges.isEmpty()}"
+         class="attribute-change">
+        属性变化: <span th:text="${gameState.lastAttributeChanges}"></span>
+    </div>
+
+    <!-- 当前事件 -->
+    <div class="event-container">
+        <div class="event-description" th:utext="${#strings.replace(gameState.currentEvent, '&#10;', '<br/>')}">
+            事件描述内容...
+        </div>
+
+        <div th:if="${!gameState.attributesAllocated}">
+            <form th:action="@{/game/choice}" method="post">
+                <p>请使用滑块分配初始属性点数（共20点）：</p>
+                <div>财富: <input type="range" min="0" max="20" name="wealth" th:value="${gameState.wealth - 10}" oninput="updateDisplay()"></div>
+                <div>健康: <input type="range" min="0" max="20" name="health" th:value="${gameState.health - 10}" oninput="updateDisplay()"></div>
+                <div>快乐: <input type="range" min="0" max="20" name="happiness" th:value="${gameState.happiness - 10}" oninput="updateDisplay()"></div>
+                <div>智慧: <input type="range" min="0" max="20" name="knowledge" th:value="${gameState.knowledge - 10}" oninput="updateDisplay()"></div>
+                <p>剩余点数: <span id="remaining">20</span></p>
+                <button type="submit">完成分配</button>
+            </form>
+            <script>
+                function updateDisplay() {
+                    var w = parseInt(document.querySelector('input[name=wealth]').value);
+                    var h = parseInt(document.querySelector('input[name=health]').value);
+                    var ha = parseInt(document.querySelector('input[name=happiness]').value);
+                    var k = parseInt(document.querySelector('input[name=knowledge]').value);
+                    var remaining = 20 - w - h - ha - k;
+                    document.getElementById('remaining').textContent = remaining;
+                    if (remaining < 0) {
+                        document.getElementById('remaining').style.color = 'red';
+                    } else {
+                        document.getElementById('remaining').style.color = 'black';
+                    }
+                }
+                updateDisplay();
+            </script>
+        </div>
+
+        <div class="choices" th:unless="${gameState.gameEnded or !gameState.attributesAllocated}">
+            <form th:each="choice, iter : ${gameState.currentChoices}"
+                  th:action="@{/game/choice}" method="post" style="display: inline-block; margin: 5px;">
+                <input type="hidden" name="choiceIndex" th:value="${iter.index}">
+                <button type="submit" class="choice-btn" th:text="${choice}"
+                        th:class="${choice == '提前结束游戏'} ? 'exit-btn' : 'choice-btn'">
+                    选择文本
+                </button>
+            </form>
+        </div>
+
+        <div th:if="${gameState.gameEnded}">
+            <div style="text-align: center; margin: 30px 0;">
+                <h3 style="color: #667eea;" th:text="${gameState.currentEvent}">
+                    游戏结束信息
+                </h3>
+                <div class="final-stats" style="margin: 20px 0; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                    <h4>最终属性</h4>
+                    <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+                        <div>财富: <span th:text="${gameState.wealth}"></span></div>
+                        <div>健康: <span th:text="${gameState.health}"></span></div>
+                        <div>快乐: <span th:text="${gameState.happiness}"></span></div>
+                        <div>智慧: <span th:text="${gameState.knowledge}"></span></div>
+                    </div>
+                    <div style="margin-top: 10px;">
+                        总分: <span th:text="${gameState.wealth + gameState.health + gameState.happiness + gameState.knowledge}"></span>
+                    </div>
+                </div>
+                <a th:href="@{/game/new}" class="choice-btn"
+                   style="display: inline-block; margin-top: 20px;">
+                    开始新游戏
+                </a>
+                <a th:href="@{/game/records}" class="choice-btn"
+                   style="display: inline-block; margin-top: 20px; margin-left: 10px;">
+                    查看记录
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 人生轨迹 -->
+    <div style="margin-top: 30px;" th:if="${!gameState.lifeEvents.isEmpty()}">
+        <h4 style="color: #667eea;">人生轨迹</h4>
+        <div style="max-height: 200px; overflow-y: auto; background: #f8f9fa;
+                       padding: 15px; border-radius: 8px;">
+            <div th:each="event : ${gameState.lifeEvents}"
+                 th:text="${event}" style="margin-bottom: 8px; font-size: 14px;">
+            </div>
+            <div th:if="${gameState.lifeEvents.isEmpty()}" style="color: #999; font-style: italic;">
+                人生旅程即将开始...
+            </div>
+        </div>
+    </div>
+
+    <!-- 游戏提示 -->
+    <div style="margin-top: 20px; padding: 15px; background: #e3f2fd; border-radius: 8px; font-size: 14px;">
+        <p style="margin: 0; color: #1976d2;">
+            <strong>游戏提示:</strong>
+            <span th:if="${!gameState.attributesAllocated}">请合理分配初始属性点数</span>
+            <span th:if="${gameState.attributesAllocated and !gameState.gameEnded}">每个选择都会影响你的人生轨迹，当健康归零或年龄达到80岁时游戏结束</span>
+            <span th:if="${gameState.gameEnded}">恭喜完成一段人生旅程！</span>
+        </p>
+    </div>
+</div>
+</body>
+</html>

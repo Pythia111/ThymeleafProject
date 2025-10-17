@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>属性分配 - 人生抉择模拟器</title>
+    <link href="/css/style.css" rel="stylesheet">
+    <style>
+        .allocation-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .attribute-slider {
+            margin: 20px 0;
+        }
+
+        .slider-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .slider-value {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #ddd;
+            outline: none;
+        }
+
+        .total-points {
+            text-align: center;
+            font-size: 18px;
+            margin: 20px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .remaining-points {
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .warning {
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="allocation-container">
+    <h2 style="text-align: center; color: #667eea; margin-bottom: 30px;">
+        初始属性分配
+    </h2>
+
+    <p style="text-align: center; margin-bottom: 30px;">
+        请分配20点属性到以下四个维度中：
+    </p>
+
+    <form th:action="@{/game/allocate}" method="post" id="allocationForm">
+        <!-- 财富 -->
+        <div class="attribute-slider">
+            <div class="slider-info">
+                <span>财富: <span class="slider-value" id="wealthValue">5</span></span>
+                <span>影响赚钱能力和物质生活</span>
+            </div>
+            <input type="range" id="wealthSlider" name="wealth" min="0" max="20" value="5"
+                   oninput="updateSlider('wealth', this.value)">
+        </div>
+
+        <!-- 健康 -->
+        <div class="attribute-slider">
+            <div class="slider-info">
+                <span>健康: <span class="slider-value" id="healthValue">5</span></span>
+                <span>影响生命长度和身体素质</span>
+            </div>
+            <input type="range" id="healthSlider" name="health" min="0" max="20" value="5"
+                   oninput="updateSlider('health', this.value)">
+        </div>
+
+        <!-- 快乐 -->
+        <div class="attribute-slider">
+            <div class="slider-info">
+                <span>快乐: <span class="slider-value" id="happinessValue">5</span></span>
+                <span>影响幸福感和情绪状态</span>
+            </div>
+            <input type="range" id="happinessSlider" name="happiness" min="0" max="20" value="5"
+                   oninput="updateSlider('happiness', this.value)">
+        </div>
+
+        <!-- 智慧 -->
+        <div class="attribute-slider">
+            <div class="slider-info">
+                <span>智慧: <span class="slider-value" id="knowledgeValue">5</span></span>
+                <span>影响学习能力和知识获取</span>
+            </div>
+            <input type="range" id="knowledgeSlider" name="knowledge" min="0" max="20" value="5"
+                   oninput="updateSlider('knowledge', this.value)">
+        </div>
+
+        <div class="total-points">
+            已分配: <span id="usedPoints">20</span> / 20 点
+            <span id="remainingText">剩余: <span class="remaining-points" id="remainingPoints">0</span> 点</span>
+            <div id="warningText" class="warning" style="display: none;">点数分配不正确！</div>
+        </div>
+
+        <button type="submit" class="choice-btn" style="width: 100%;" id="submitBtn">
+            开始人生旅程
+        </button>
+    </form>
+</div>
+
+<script>
+    function updateSlider(attribute, value) {
+        // 更新显示值
+        document.getElementById(attribute + 'Value').textContent = value;
+
+        // 计算总点数
+        const wealth = parseInt(document.getElementById('wealthSlider').value);
+        const health = parseInt(document.getElementById('healthSlider').value);
+        const happiness = parseInt(document.getElementById('happinessSlider').value);
+        const knowledge = parseInt(document.getElementById('knowledgeSlider').value);
+
+        const total = wealth + health + happiness + knowledge;
+        const remaining = 20 - total;
+
+        // 更新显示
+        document.getElementById('usedPoints').textContent = total;
+        document.getElementById('remainingPoints').textContent = remaining;
+
+        // 检查是否分配正确
+        const warningText = document.getElementById('warningText');
+        const submitBtn = document.getElementById('submitBtn');
+
+        if (total !== 20) {
+            warningText.style.display = 'block';
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.5';
+        } else {
+            warningText.style.display = 'none';
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = '1';
+        }
+    }
+
+    // 初始化显示
+    document.addEventListener('DOMContentLoaded', function() {
+        updateSlider('wealth', 5);
+        updateSlider('health', 5);
+        updateSlider('happiness', 5);
+        updateSlider('knowledge', 5);
+    });
+</script>
+</body>
+</html>

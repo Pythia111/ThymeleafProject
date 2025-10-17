@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏记录 - 人生抉择模拟器</title>
+    <link href="/css/style.css" rel="stylesheet">
+    <style>
+        .record-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+        .record-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .stat-box {
+            text-align: center;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        .ending-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #667eea;
+            color: white;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        .total-score {
+            font-weight: bold;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <h2 style="color: #667eea; margin: 0;">游戏记录</h2>
+        <div>
+            <a th:href="@{/game/new}" class="choice-btn" style="text-decoration: none; margin-right: 10px;">开始新游戏</a>
+            <a th:href="@{/game}" class="choice-btn" style="text-decoration: none;">返回游戏</a>
+        </div>
+    </div>
+
+    <div th:if="${records.isEmpty()}" style="text-align: center; padding: 50px;">
+        <p style="color: #666; font-size: 18px;">还没有游戏记录，快去开始新游戏吧！</p>
+        <a th:href="@{/game/new}" class="choice-btn" style="text-decoration: none; margin-top: 20px;">开始第一次人生旅程</a>
+    </div>
+
+    <div th:each="record : ${records}" class="record-item">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+            <h4 style="margin: 0; color: #333;" th:text="${record.characterName}">角色名</h4>
+            <div style="text-align: right; font-size: 14px; color: #666;">
+                <div>游戏时间: <span th:text="${#temporals.format(record.playTime, 'yyyy-MM-dd HH:mm')}"></span></div>
+                <div>享年: <span th:text="${record.finalAge} + '岁'"></span></div>
+                <div>经历事件: <span th:text="${record.totalEvents} + '个'"></span></div>
+            </div>
+        </div>
+
+        <div class="record-stats">
+            <div class="stat-box">
+                <div class="stat-label">财富</div>
+                <div class="stat-value" th:text="${record.finalWealth}">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">健康</div>
+                <div class="stat-value" th:text="${record.finalHealth}">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">快乐</div>
+                <div class="stat-value" th:text="${record.finalHappiness}">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">智慧</div>
+                <div class="stat-value" th:text="${record.finalKnowledge}">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">总分</div>
+                <div class="stat-value total-score"
+                     th:text="${record.finalWealth + record.finalHealth + record.finalHappiness + record.finalKnowledge}">0</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 15px;">
+            <span class="ending-badge" th:text="${record.endingType}">结局类型</span>
+        </div>
+
+        <!-- 人生轨迹预览 -->
+        <div th:if="${record.lifePath != null and !record.lifePath.isEmpty()}"
+             style="margin-top: 15px; padding: 10px; background: white; border-radius: 6px;">
+            <details>
+                <summary style="cursor: pointer; color: #667eea; font-weight: bold;">查看人生轨迹</summary>
+                <div style="margin-top: 10px; max-height: 200px; overflow-y: auto;">
+                    <div th:each="event : ${#strings.listSplit(record.lifePath, '|')}"
+                         style="font-size: 13px; margin-bottom: 5px; color: #555;"
+                         th:text="${event}">
+                    </div>
+                </div>
+            </details>
+        </div>
+    </div>
+
+    <!-- 统计信息 -->
+    <div th:if="${!records.isEmpty()}" style="margin-top: 30px; padding: 20px; background: #e3f2fd; border-radius: 10px;">
+        <h4 style="color: #1976d2; margin-top: 0;">游戏统计</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+            <div>总游戏次数: <strong th:text="${records.size()}"></strong></div>
+            <div>最高财富: <strong th:text="${records.stream().mapToInt(r -> r.finalWealth).max().orElse(0)}"></strong></div>
+            <div>最高健康: <strong th:text="${records.stream().mapToInt(r -> r.finalHealth).max().orElse(0)}"></strong></div>
+            <div>最高快乐: <strong th:text="${records.stream().mapToInt(r -> r.finalHappiness).max().orElse(0)}"></strong></div>
+            <div>最高智慧: <strong th:text="${records.stream().mapToInt(r -> r.finalKnowledge).max().orElse(0)}"></strong></div>
+            <div>最长寿命: <strong th:text="${records.stream().mapToInt(r -> r.finalAge != null ? r.finalAge : 0).max().orElse(0)} + '岁'"></strong></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
