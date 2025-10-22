@@ -29,8 +29,12 @@ public class GameState {
     private RandomEvent pendingRandomEvent;
 
     public void addEvent(String event) {
-        // 修复：只在事件前添加一次年龄
-        lifeEvents.add("年龄" + age + "岁: " + event);
+        // 修复：只在事件前添加一次年龄，使用当前年龄
+        String eventWithAge = "年龄" + this.age + "岁: " + event;
+        // 避免重复添加相同事件
+        if (lifeEvents.isEmpty() || !lifeEvents.get(lifeEvents.size() - 1).equals(eventWithAge)) {
+            lifeEvents.add(eventWithAge);
+        }
     }
 
     public void applyEffect(int wealthChange, int healthChange,

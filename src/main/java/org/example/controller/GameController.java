@@ -95,13 +95,13 @@ public class GameController {
         return "game";
     }
 
-    // 新增：开始新游戏的方法
     @GetMapping("/new")
     public String newGame(HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) return "redirect:/login";
 
-        GameState gameState = new GameState();
+        // 使用决策树服务初始化游戏状态
+        GameState gameState = decisionTreeGameService.initializeGame();
         gameState.setCharacterName(user.getUsername() + "的人生");
         session.setAttribute("gameState", gameState);
 
@@ -134,7 +134,6 @@ public class GameController {
         return "attribute-allocation";
     }
 
-    // 新增：处理属性分配提交
     @PostMapping("/choice")
     public String handleChoice(@RequestParam(required = false) Integer wealth,
                                @RequestParam(required = false) Integer health,
@@ -164,11 +163,8 @@ public class GameController {
             gameState.setKnowledge(10 + knowledge);
             gameState.setAttributesAllocated(true);
 
-            // 直接设置到第一个游戏事件，跳过中间步骤
-            gameState.setCurrentNodeId("infant_1");
-            gameState.setCurrentEvent("作为婴儿，你的早期发展重点是...");
-            gameState.setCurrentChoices(Arrays.asList("身体运动能力", "语言沟通能力", "社交互动能力"));
-
+            // 使用决策树服务处理初始节点跳转
+            decisionTreeGameService.processDecision(gameState, 0); // 从 start 开始
             return "redirect:/game";
         }
 
