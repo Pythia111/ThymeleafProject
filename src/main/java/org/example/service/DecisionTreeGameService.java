@@ -24,27 +24,27 @@ public class DecisionTreeGameService {
     }
 
     private void buildKeyNodeAges() {
-        // 重新设计关键节点年龄，使其符合现实逻辑
+        // 重新设计关键节点年龄，确保合理间隔
         keyNodeAges.put("start", 0);  // 出生
-        keyNodeAges.put("infant_2", 2);  // 婴幼儿期
-        keyNodeAges.put("childhood_1", 6);  // 小学入学
-        keyNodeAges.put("childhood_2", 9);  // 小学中年级
-        keyNodeAges.put("childhood_3", 12); // 小学毕业
-        keyNodeAges.put("teenager_1", 13);  // 初中入学
-        keyNodeAges.put("teenager_2", 15);  // 初中毕业
-        keyNodeAges.put("teenager_3", 16);  // 高中
-        keyNodeAges.put("high_school_graduation", 18); // 高中毕业
-        keyNodeAges.put("college_1", 19);   // 大学一年级
-        keyNodeAges.put("college_2", 21);   // 大学三年级
-        keyNodeAges.put("college_graduation", 22); // 大学毕业
-        keyNodeAges.put("career_start", 23); // 职业开始
-        keyNodeAges.put("career_1", 28);    // 职业发展
-        keyNodeAges.put("career_2", 35);    // 职业中期
-        keyNodeAges.put("midlife_crisis", 45); // 中年
-        keyNodeAges.put("midlife_2", 55);   // 中年后期
-        keyNodeAges.put("retirement_decision", 60); // 退休决策
-        keyNodeAges.put("elder_1", 70);     // 老年初期
-        keyNodeAges.put("game_end", 80);    // 游戏结束
+        keyNodeAges.put("infant_2", 4);  // 幼儿期
+        keyNodeAges.put("childhood_1", 7);  // 小学入学
+        keyNodeAges.put("childhood_2", 10);  // 小学中年级
+        keyNodeAges.put("childhood_3", 13); // 小学毕业
+        keyNodeAges.put("teenager_1", 14);  // 初中入学
+        keyNodeAges.put("teenager_2", 16);  // 初中毕业
+        keyNodeAges.put("teenager_3", 17);  // 高中
+        keyNodeAges.put("high_school_graduation", 19); // 高中毕业
+        keyNodeAges.put("college_1", 20);   // 大学一年级
+        keyNodeAges.put("college_2", 22);   // 大学三年级
+        keyNodeAges.put("college_graduation", 24); // 大学毕业
+        keyNodeAges.put("career_start", 26); // 职业开始
+        keyNodeAges.put("career_1", 30);    // 职业发展
+        keyNodeAges.put("career_2", 38);    // 职业中期
+        keyNodeAges.put("midlife_crisis", 46); // 中年
+        keyNodeAges.put("midlife_2", 56);   // 中年后期
+        keyNodeAges.put("retirement_decision", 62); // 退休决策
+        keyNodeAges.put("elder_1", 72);     // 老年初期
+        keyNodeAges.put("game_end", 82);    // 游戏结束
     }
 
     private void buildRandomEvents() {
@@ -391,7 +391,7 @@ public class DecisionTreeGameService {
         ));
 
         decisionTree.put("infant_2", new DecisionNode(
-                "infant_2", 2,
+                "infant_2", 4,
                 "作为幼儿，你的早期发展重点是...",
                 Arrays.asList("身体运动能力", "语言沟通能力", "社交互动能力"),
                 Arrays.asList("childhood_1", "childhood_1", "childhood_1"),
@@ -404,7 +404,7 @@ public class DecisionTreeGameService {
 
         // === 童年期关键节点 ===
         decisionTree.put("childhood_1", new DecisionNode(
-                "childhood_1", 6,
+                "childhood_1", 7,
                 "进入小学，你的学习态度是...",
                 Arrays.asList("认真学习，争取好成绩", "培养兴趣爱好", "快乐玩耍，享受童年"),
                 Arrays.asList("childhood_2", "childhood_2", "childhood_2"),
@@ -416,7 +416,7 @@ public class DecisionTreeGameService {
         ));
 
         decisionTree.put("childhood_2", new DecisionNode(
-                "childhood_2", 9,
+                "childhood_2", 10,
                 "小学中年级，你面临的选择是...",
                 Arrays.asList("参加课外辅导班", "加入兴趣小组", "更多时间玩耍"),
                 Arrays.asList("childhood_3", "childhood_3", "childhood_3"),
@@ -428,7 +428,7 @@ public class DecisionTreeGameService {
         ));
 
         decisionTree.put("childhood_3", new DecisionNode(
-                "childhood_3", 12,
+                "childhood_3", 13,
                 "小学毕业，即将进入中学，你准备...",
                 Arrays.asList("提前预习中学课程", "好好享受假期", "发展个人特长"),
                 Arrays.asList("teenager_1", "teenager_1", "teenager_1"),
@@ -441,7 +441,7 @@ public class DecisionTreeGameService {
 
         // === 青少年期关键节点 ===
         decisionTree.put("teenager_1", new DecisionNode(
-                "teenager_1", 13,
+                "teenager_1", 14,
                 "进入初中，面临新的学习环境，你选择...",
                 Arrays.asList("专注学习，争取好成绩", "参加社团活动", "结交新朋友"),
                 Arrays.asList("teenager_2", "teenager_2", "teenager_2"),
@@ -453,7 +453,7 @@ public class DecisionTreeGameService {
         ));
 
         decisionTree.put("teenager_2", new DecisionNode(
-                "teenager_2", 15,
+                "teenager_2", 16,
                 "初中毕业，面临升学选择...",
                 Arrays.asList("努力考取重点高中", "选择普通高中", "考虑职业学校"),
                 Arrays.asList("teenager_3", "teenager_3", "teenager_3"),
@@ -465,7 +465,7 @@ public class DecisionTreeGameService {
         ));
 
         decisionTree.put("teenager_3", new DecisionNode(
-                "teenager_3", 16,
+                "teenager_3", 17,
                 "高中阶段，学习压力增大，你如何应对？",
                 Arrays.asList("刻苦学习备战高考", "平衡学习与兴趣", "注重全面发展"),
                 Arrays.asList("high_school_graduation", "high_school_graduation", "high_school_graduation"),
@@ -478,7 +478,7 @@ public class DecisionTreeGameService {
 
         // === 高中毕业关键节点 ===
         decisionTree.put("high_school_graduation", new DecisionNode(
-                "high_school_graduation", 18,
+                "high_school_graduation", 19,
                 "高中毕业，面临人生重要选择...",
                 Arrays.asList("参加高考上大学", "学习技术就业", "直接工作积累经验"),
                 nextNodeByKnowledge("college_1", "career_start", "career_start"),
@@ -491,7 +491,7 @@ public class DecisionTreeGameService {
 
         // === 大学毕业关键节点 ===
         decisionTree.put("college_1", new DecisionNode(
-                "college_1", 19,
+                "college_1", 20,
                 "大学生活开始，你如何规划你的大学生活？",
                 Arrays.asList("专注学术研究", "参与社团活动", "发展个人兴趣"),
                 Arrays.asList("college_2", "college_2", "college_2"),
@@ -503,7 +503,7 @@ public class DecisionTreeGameService {
         ));
 
         decisionTree.put("college_2", new DecisionNode(
-                "college_2", 21,
+                "college_2", 22,
                 "大学生活过半，你面临的选择是...",
                 Arrays.asList("准备考研深造", "寻找实习机会", "享受大学生活"),
                 Arrays.asList("college_graduation", "college_graduation", "college_graduation"),
@@ -515,7 +515,7 @@ public class DecisionTreeGameService {
         ));
 
         decisionTree.put("college_graduation", new DecisionNode(
-                "college_graduation", 22,
+                "college_graduation", 24,
                 "大学毕业，就业选择...",
                 Arrays.asList("大公司稳定工作", "创业追求梦想", "继续深造读研"),
                 Arrays.asList("career_start", "career_start", "career_start"),
@@ -528,7 +528,7 @@ public class DecisionTreeGameService {
 
         // === 职业生涯开始关键节点 ===
         decisionTree.put("career_start", new DecisionNode(
-                "career_start", 25,
+                "career_start", 26,
                 "职业生涯正式开始，你注重...",
                 Arrays.asList("努力工作晋升", "工作生活平衡", "积累人脉资源"),
                 Arrays.asList("career_1", "career_1", "career_1"),
@@ -540,7 +540,7 @@ public class DecisionTreeGameService {
         ));
 
         decisionTree.put("career_1", new DecisionNode(
-                "career_1", 28,
+                "career_1", 30,
                 "工作几年后，你面临职业发展的选择...",
                 Arrays.asList("追求晋升机会", "寻求工作生活平衡", "考虑职业转型"),
                 Arrays.asList("midlife_crisis", "midlife_crisis", "midlife_crisis"),
@@ -553,7 +553,7 @@ public class DecisionTreeGameService {
 
         // === 中年危机关键节点 ===
         decisionTree.put("midlife_crisis", new DecisionNode(
-                "midlife_crisis", 45,
+                "midlife_crisis", 46,
                 "步入中年，面临生活压力，你选择...",
                 Arrays.asList("专注事业发展", "重视家庭生活", "寻求生活改变"),
                 nextNodeByHappiness("midlife_2", "midlife_2", "midlife_2"),
@@ -565,7 +565,7 @@ public class DecisionTreeGameService {
         ));
 
         decisionTree.put("midlife_2", new DecisionNode(
-                "midlife_2", 55,
+                "midlife_2", 56,
                 "中年后期，你思考更多的是...",
                 Arrays.asList("规划退休生活", "继续事业发展", "关注健康养生"),
                 Arrays.asList("retirement_decision", "retirement_decision", "retirement_decision"),
@@ -578,7 +578,7 @@ public class DecisionTreeGameService {
 
         // === 退休决策关键节点 ===
         decisionTree.put("retirement_decision", new DecisionNode(
-                "retirement_decision", 65,
+                "retirement_decision", 62,
                 "到了退休年龄，你决定...",
                 Arrays.asList("正式退休安享晚年", "继续工作发挥余热", "半退休享受生活"),
                 Arrays.asList("elder_1", "elder_1", "elder_1"),
@@ -590,7 +590,7 @@ public class DecisionTreeGameService {
         ));
 
         decisionTree.put("elder_1", new DecisionNode(
-                "elder_1", 70,
+                "elder_1", 72,
                 "进入老年生活，你的态度是...",
                 Arrays.asList("积极面对生活", "享受宁静时光", "继续学习成长"),
                 Arrays.asList("game_end", "game_end", "game_end"),
@@ -603,7 +603,7 @@ public class DecisionTreeGameService {
 
         // === 游戏结束 ===
         decisionTree.put("game_end", new DecisionNode(
-                "game_end", 80,
+                "game_end", 82,
                 "人生旅程结束",
                 Arrays.asList("查看人生总结", "开始新游戏"),
                 Arrays.asList("life_summary", "new_game"),
@@ -649,27 +649,46 @@ public class DecisionTreeGameService {
         return availableEvents.get(random.nextInt(availableEvents.size()));
     }
 
-    private int getRandomAgeBetween(String currentKeyNode, String nextKeyNode) {
+    // 修改获取随机年龄的方法，确保唯一性
+    private int getRandomAgeBetween(String currentKeyNode, String nextKeyNode, GameState state) {
         int minAge = keyNodeAges.get(currentKeyNode);
         int maxAge = keyNodeAges.get(nextKeyNode);
 
-        // 确保年龄严格递增且合理
-        if (maxAge <= minAge) {
+        // 获取已使用的年龄
+        Set<Integer> usedAges = getUsedAgesFromEvents(state);
+        usedAges.add(minAge); // 当前关键节点年龄已使用
+        usedAges.add(maxAge); // 下一个关键节点年龄将被使用
+
+        // 在范围内找到未使用的年龄
+        List<Integer> availableAges = new ArrayList<>();
+        for (int age = minAge + 1; age < maxAge; age++) {
+            if (!usedAges.contains(age)) {
+                availableAges.add(age);
+            }
+        }
+
+        if (availableAges.isEmpty()) {
+            // 如果没有可用年龄，返回中间值
             return minAge + 1;
         }
 
-        // 如果年龄差小于等于1，直接返回中间值
-        if (maxAge - minAge <= 1) {
-            return minAge + 1;
-        }
+        return availableAges.get(random.nextInt(availableAges.size()));
+    }
 
-        // 确保随机数范围为正数
-        int ageRange = maxAge - minAge - 1;
-        if (ageRange <= 0) {
-            return minAge + 1;
+    // 从事件历史中提取已使用的年龄
+    private Set<Integer> getUsedAgesFromEvents(GameState state) {
+        Set<Integer> usedAges = new HashSet<>();
+        for (String event : state.getLifeEvents()) {
+            if (event.startsWith("年龄") && event.contains("岁:")) {
+                try {
+                    String ageStr = event.substring(2, event.indexOf("岁:"));
+                    usedAges.add(Integer.parseInt(ageStr));
+                } catch (Exception e) {
+                    // 解析失败，忽略
+                }
+            }
         }
-
-        return minAge + 1 + random.nextInt(ageRange);
+        return usedAges;
     }
 
     // 在 processDecision 方法开始处添加更严格的检查
@@ -712,14 +731,15 @@ public class DecisionTreeGameService {
             nextNodeId = "game_end"; // 如果节点不存在，跳转到结束
         }
 
-        // 检查是否是关键节点之间的过渡
+        // 检查是否是关键节点之间的过渡 - 修改触发条件
         if (isKeyNode(currentNodeId) && isKeyNode(nextNodeId) &&
-                !currentNodeId.equals(nextNodeId)) {
+                !currentNodeId.equals(nextNodeId) &&
+                keyNodeAges.get(nextNodeId) - keyNodeAges.get(currentNodeId) > 2) { // 只有年龄差距大于2才触发随机事件
 
             // 在关键节点之间插入随机事件
             RandomEvent randomEvent = getRandomEvent(currentNodeId, nextNodeId, state);
             if (randomEvent != null && random.nextDouble() < 0.6) { // 60%概率触发随机事件
-                return handleRandomEvent(state, randomEvent, nextNodeId);
+                return handleRandomEvent(state, randomEvent, nextNodeId, currentNode, choiceIndex);
             }
         }
 
@@ -730,7 +750,25 @@ public class DecisionTreeGameService {
         return keyNodeAges.containsKey(nodeId);
     }
 
-    private GameState handleRandomEvent(GameState state, RandomEvent randomEvent, String nextKeyNodeId) {
+    // 修改 handleRandomEvent 方法，传递更多参数以便记录关键节点选择
+    private GameState handleRandomEvent(GameState state, RandomEvent randomEvent, String nextKeyNodeId,
+                                      DecisionNode currentNode, int choiceIndex) {
+        // 首先记录关键节点的选择
+        if (isKeyNode(currentNode.getId()) && !currentNode.getId().equals("start")) {
+            String currentChoice = currentNode.getChoices().get(choiceIndex);
+            state.addEvent(currentNode.getDescription() + " → " + currentChoice);
+
+            // 应用关键节点的属性效果
+            List<AttributeEffect> effects = currentNode.getEffects();
+            if (effects != null && choiceIndex >= 0 && choiceIndex < effects.size()) {
+                AttributeEffect effect = effects.get(choiceIndex);
+                if (effect != null) {
+                    state.applyEffect(effect.getWealthChange(), effect.getHealthChange(),
+                            effect.getHappinessChange(), effect.getKnowledgeChange());
+                }
+            }
+        }
+
         // 设置随机事件信息
         state.setCurrentNodeId("random_event");
         state.setCurrentEvent(randomEvent.getDescription());
@@ -738,8 +776,8 @@ public class DecisionTreeGameService {
         state.setPendingKeyNode(nextKeyNodeId);
         state.setPendingRandomEvent(randomEvent);
 
-        // 更新年龄（在关键节点年龄之间随机）
-        int randomAge = getRandomAgeBetween(state.getLastKeyNode(), nextKeyNodeId);
+        // 更新年龄到随机事件年龄
+        int randomAge = getRandomAgeBetween(state.getLastKeyNode(), nextKeyNodeId, state);
         state.setAge(randomAge);
 
         return state;
@@ -757,7 +795,7 @@ public class DecisionTreeGameService {
                         effect.getHappinessChange(), effect.getKnowledgeChange());
             }
 
-            // 记录事件 - 修复重复年龄问题
+            // 记录随机事件选择 - 使用当前年龄
             state.addEvent(randomEvent.getDescription() + " → " + randomEvent.getChoices().get(choiceIndex));
 
             // 检查游戏结束条件
@@ -765,10 +803,32 @@ public class DecisionTreeGameService {
                 return state;
             }
 
-            // 移动到下一个关键节点
-            DecisionNode lastKeyNode = decisionTree.get(state.getLastKeyNode());
-            return moveToNextNode(state, lastKeyNode, nextKeyNodeId, 0);
+            // 移动到下一个关键节点，但不再记录关键节点选择（已在handleRandomEvent中记录）
+            return moveToKeyNode(state, nextKeyNodeId);
         }
+
+        return state;
+    }
+
+    // 新增方法：直接移动到关键节点，不记录选择
+    private GameState moveToKeyNode(GameState state, String nextNodeId) {
+        DecisionNode nextNode = decisionTree.get(nextNodeId);
+
+        // 更新年龄到关键节点年龄
+        if (isKeyNode(nextNodeId)) {
+            state.setAge(keyNodeAges.get(nextNodeId));
+            state.setLastKeyNode(nextNodeId);
+        }
+
+        // 移动到下一个节点
+        state.setCurrentNodeId(nextNodeId);
+        state.setCurrentEvent(nextNode.getDescription());
+        state.setCurrentChoices(nextNode.getChoices());
+        state.setPendingKeyNode(null);
+        state.setPendingRandomEvent(null);
+
+        // 检查游戏结束条件
+        checkGameEndCondition(state);
 
         return state;
     }
@@ -787,7 +847,7 @@ public class DecisionTreeGameService {
             }
         }
 
-        // 记录事件（关键节点）- 在更新年龄之前记录，使用当前年龄
+        // 记录关键节点选择 - 在更新年龄之前记录
         if (isKeyNode(currentNode.getId()) && !currentNode.getId().equals("start")) {
             state.addEvent(currentNode.getDescription() + " → " + currentNode.getChoices().get(choiceIndex));
         }

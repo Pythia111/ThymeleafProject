@@ -29,10 +29,31 @@ public class GameState {
     private RandomEvent pendingRandomEvent;
 
     public void addEvent(String event) {
-        // 修复：只在事件前添加一次年龄，使用当前年龄
+        // 生成完整的事件描述
         String eventWithAge = "年龄" + this.age + "岁: " + event;
-        // 避免重复添加相同事件
-        if (lifeEvents.isEmpty() || !lifeEvents.get(lifeEvents.size() - 1).equals(eventWithAge)) {
+
+        // 避免重复添加相同事件 - 检查最近的几个事件
+        boolean isDuplicate = false;
+        int checkCount = Math.min(3, lifeEvents.size()); // 检查最近3个事件
+
+        for (int i = lifeEvents.size() - checkCount; i < lifeEvents.size(); i++) {
+            String existingEvent = lifeEvents.get(i);
+            // 如果事件内容完全相同，则认为是重复
+            if (existingEvent.equals(eventWithAge)) {
+                isDuplicate = true;
+                break;
+            }
+            // 如果是相同年龄的相同事件内容（不同选择），也认为是潜在重复
+            String existingEventContent = existingEvent.substring(existingEvent.indexOf(": ") + 2);
+            String newEventContent = event;
+            if (existingEvent.startsWith("年龄" + this.age + "岁:") &&
+                existingEventContent.split(" → ")[0].equals(newEventContent.split(" → ")[0])) {
+                isDuplicate = true;
+                break;
+            }
+        }
+
+        if (!isDuplicate) {
             lifeEvents.add(eventWithAge);
         }
     }
